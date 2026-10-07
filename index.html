@@ -174,11 +174,11 @@ canvas#fx { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events
     <div class="peek" aria-hidden="true">생일 축하해!</div>
     <div class="pocket"></div>
     <!-- ✏️ 봉투 앞면 받는 사람 -->
-    <div class="to-label">To. [친구 이름]</div>
+    <div class="to-label">To. 서이니 </div>
     <div class="flap"></div>
     <div class="seal" aria-hidden="true">♥</div>
   </button>
-  <p class="hint" id="hint">봉투를 눌러서 열어보세요</p>
+  <p class="hint" id="hint">봉투를 눌러서 열어보세요..♥︎</p>
 </section>
 
 <!-- 2막: 편지 -->
@@ -187,22 +187,22 @@ canvas#fx { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events
     <div class="stamp" aria-hidden="true"><b>10.08</b><span>HAPPY<br>BIRTHDAY</span></div>
 
     <!-- ✏️ 받는 사람 이름 -->
-    <h1 class="to line">사랑하는 [친구 이름]에게</h1>
+    <h1 class="to line">TO. 서인이~~ </h1>
 
     <!-- ✏️ 편지 본문: 문단마다 <p class="line">…</p> 하나씩 -->
     <div class="body">
-      <p class="line">생일 축하해! 여기에 첫 문단을 채워 주세요.</p>
-      <p class="line">함께한 기억이나 고마웠던 일을 적는 두 번째 문단 자리예요.</p>
-      <p class="line">앞으로의 한 해를 응원하는 마지막 문단 자리예요.</p>
+      <p class="line"> 서인아 생일 축하해! 오늘 맛난거 많이먹고 좋은 하루 보내 ㅎ.ㅎ 원래 선물도 미리 주려고했은데.. 어쩌다보니 당이에주게됐넹 엔젤이 진자너랑 잘어울려 ㅎㅎ 기염기염하고~~ 릴스랑 게시물 넘넘잘보고있따 ㅎㅎ 아니릴스더찍어줘 졸기찧ㅎㅎㅎ </p>
+      <p class="line"> 대학오고 레전드 얕은 인간관계들만 만들고있다보니까 고등학교친구들이 너무 보고싶고 덕여라이프가 그리웜... 너네랑 급식먹고 놀던시절로 돌아가고싶흠..ㅜ 너랑 야삐선주 등 고닥교애들은 나한테 너모나 소중한존재야.. 항상 </p>
+      <p class="line"> 벌써 10월이네ㅜ 담에 만화카페가서 퍼질러누워있쟈 </p>
     </div>
 
     <!-- ✏️ 보내는 사람 -->
-    <p class="from line">[내 이름]이가<small>2026년 10월 8일</small></p>
+    <p class="from line">From. 용이~~ <small>2026년 10월 8일</small></p>
   </article>
 
   <div class="cake line" id="cake">
     <div class="candle" aria-hidden="true"><div class="flame"></div></div>
-    <button type="button" class="btn" id="blow">소원 빌고 촛불 끄기</button>
+    <button type="button" class="btn" id="blow">소원 빌고 촛불 끄기..♥︎</button>
     <div class="wish" id="wish" aria-live="polite"></div>
   </div>
 </main>
@@ -273,7 +273,7 @@ canvas#fx { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events
   btn.addEventListener('click', () => {
     const out = cake.classList.toggle('out');
     btn.textContent = out ? '촛불 다시 켜기' : '소원 빌고 촛불 끄기';
-    wish.textContent = out ? '소원이 꼭 이뤄지길! 🎉' : '';
+    wish.textContent = out ? '소원이 꼭 이뤄지길! ♥︎ 이 페이지는 하루동안 유지됩니다.' : '';
     if (out) { const r = btn.getBoundingClientRect(); burst(r.left + r.width / 2, r.top, 120, 1.8); }
   });
 })();
