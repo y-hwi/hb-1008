@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>생일 축하 편지</title>
+<meta name="robots" content="noindex, nofollow">
+<!-- 카카오톡·메신저 링크 미리보기 문구 -->
+<meta property="og:title" content="편지가 도착했어요 💌">
+<meta property="og:description" content="생일 축하해! 봉투를 눌러서 열어봐.">
+<meta name="description" content="생일 축하해! 봉투를 눌러서 열어봐.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Nanum+Pen+Script&family=Gowun+Dodum&display=swap">
+<style>
+/* Layout: 첫 화면은 봉투 하나. 봉인을 누르면 뚜껑이 열리고 편지가 올라와 화면 전체로 펼쳐짐 */
+:root {
+  --ground: #e7e4ef;
+  --paper: #fdfcf8;
+  --rule: #d9dcea;
+  --ink: #23264a;
+  --ink-soft: #5c5f82;
+  --env: #c3c8e6;
+  --env-deep: #a9afd6;
+  --env-flap: #b6bce0;
+  --flame: #f2a900;
+  --stamp: #c94f6d;
+  --shadow: 0 1px 2px rgba(35,38,74,.08), 0 14px 40px rgba(35,38,74,.16);
+  --f-hand: "Nanum Pen Script", "Gowun Batang", cursive;
+  --f-body: "Gowun Batang", "Apple SD Gothic Neo", "Malgun Gothic", serif;
+  --f-ui: "Gowun Dodum", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ground: #15172b; --paper: #22253f; --rule: #33375a; --ink: #eceaf6; --ink-soft: #a7a9c8;
+    --env: #3a3f6b; --env-deep: #2c3058; --env-flap: #444a7a;
+    --flame: #ffc23d; --stamp: #e47b95; --shadow: 0 14px 40px rgba(0,0,0,.5); color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { margin: 0; min-height: 100%; }
+body {
+  background: var(--ground); color: var(--ink); font-family: var(--f-body);
+  padding: env(safe-area-inset-top, 0px) 0 env(safe-area-inset-bottom, 0px);
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ---------- 1막: 봉투 ---------- */
+.stage {
+  min-height: 100svh; display: grid; place-items: center; align-content: center; gap: 28px;
+  padding-inline: 16px; transition: opacity .6s ease, transform .6s ease;
+}
+.stage.gone { opacity: 0; transform: translateY(-20px) scale(.96); pointer-events: none; }
+
+.envelope {
+  position: relative; width: min(88vw, 420px); aspect-ratio: 3 / 2;
+  perspective: 1200px; cursor: pointer; border: 0; padding: 0; background: none;
+  animation: float 3.2s ease-in-out infinite;
+}
+.envelope:focus-visible { outline: 3px solid var(--flame); outline-offset: 8px; border-radius: 6px; }
+@keyframes float { 0%,100% { transform: translateY(0) rotate(-1.2deg); } 50% { transform: translateY(-8px) rotate(1deg); } }
+.envelope.opening { animation: none; transform: none; cursor: default; }
+
+.env-back { position: absolute; inset: 0; background: var(--env-deep); border-radius: 6px; box-shadow: var(--shadow); }
+.peek {
+  position: absolute; left: 6%; right: 6%; top: 8%; height: 84%;
+  background: var(--paper); border-radius: 3px; padding: 18px 20px;
+  background-image: repeating-linear-gradient(to bottom, transparent 0 21px, var(--rule) 21px 22px);
+  background-position: 0 48px;
+  font-family: var(--f-hand); font-size: 26px; color: var(--ink);
+  transition: transform 1s cubic-bezier(.2,.8,.2,1) .55s;
+  z-index: 1;
+}
+.pocket {
+  position: absolute; inset: 0; z-index: 2; border-radius: 6px; overflow: hidden; pointer-events: none;
+}
+.pocket::before, .pocket::after { content: ""; position: absolute; inset: 0; }
+.pocket::before { background: var(--env); clip-path: polygon(0 0, 50% 55%, 100% 0, 100% 100%, 0 100%); }
+.pocket::after { background: var(--env-deep); opacity: .35; clip-path: polygon(0 100%, 50% 52%, 100% 100%); }
+.to-label {
+  position: absolute; left: 0; right: 0; bottom: 14%; z-index: 3; text-align: center;
+  font-family: var(--f-hand); font-size: clamp(26px, 6vw, 32px); color: var(--ink); pointer-events: none;
+}
+.flap {
+  position: absolute; left: 0; right: 0; top: 0; height: 58%; z-index: 4;
+  transform-origin: 50% 0; transform-style: preserve-3d;
+  transition: transform .7s cubic-bezier(.5,0,.3,1), z-index 0s linear .35s;
+}
+.flap::before, .flap::after {
+  content: ""; position: absolute; inset: 0; clip-path: polygon(0 0, 100% 0, 50% 100%); backface-visibility: hidden;
+}
+.flap::before { background: var(--env-flap); }
+.flap::after { background: var(--env-deep); transform: rotateX(180deg); }
+.seal {
+  position: absolute; left: 50%; top: 58%; z-index: 5; width: 60px; height: 60px; margin: -30px 0 0 -30px;
+  border-radius: 50%; background: var(--stamp); color: var(--paper);
+  display: grid; place-items: center; font-family: var(--f-hand); font-size: 30px; line-height: 1;
+  box-shadow: inset 0 0 0 4px color-mix(in srgb, var(--paper) 25%, transparent), 0 3px 8px rgba(0,0,0,.2);
+  transition: transform .45s cubic-bezier(.5,-0.4,.6,1), opacity .35s;
+}
+.opening .seal { transform: scale(0) rotate(-40deg); opacity: 0; }
+.opening .flap { transform: rotateX(180deg); z-index: 0; }
+.opening .peek { transform: translateY(-62%); }
+
+.hint { font-family: var(--f-ui); font-size: 15px; color: var(--ink-soft); letter-spacing: .02em; animation: blink 2.4s ease-in-out infinite; }
+@keyframes blink { 50% { opacity: .45; } }
+
+/* ---------- 2막: 펼친 편지 ---------- */
+.read { padding-inline: 16px; padding-block: 40px 56px; display: grid; justify-items: center; gap: 28px; }
+.read[hidden] { display: none; }
+.letter {
+  position: relative; width: 100%; max-width: 620px; background: var(--paper);
+  border-radius: 4px; box-shadow: var(--shadow);
+  padding: 56px clamp(22px, 6vw, 56px) 48px;
+  border-top: 6px solid var(--stamp);
+  transform-origin: 50% 0;
+  animation: unfold 1s cubic-bezier(.2,.8,.2,1) both;
+}
+@keyframes unfold {
+  0% { transform: perspective(1400px) rotateX(-70deg) translateY(30px); opacity: 0; }
+  60% { opacity: 1; }
+  100% { transform: none; opacity: 1; }
+}
+.read .line { opacity: 0; transform: translateY(8px); animation: ink .7s ease forwards; }
+@keyframes ink { to { opacity: 1; transform: none; } }
+
+.stamp {
+  position: absolute; top: 18px; right: 18px; width: 64px; height: 76px;
+  border: 2px dashed var(--stamp); border-radius: 3px; display: grid; place-items: center; align-content: center; gap: 2px;
+  color: var(--stamp); font-family: var(--f-ui); text-align: center; transform: rotate(4deg);
+}
+.stamp b { font-size: 22px; line-height: 1; font-variant-numeric: tabular-nums; }
+.stamp span { font-size: 9px; letter-spacing: .12em; line-height: 1.3; }
+
+.to { font-family: var(--f-hand); font-weight: 400; font-size: clamp(34px, 7vw, 44px); line-height: 1.1; margin: 0 0 22px; text-wrap: balance; word-break: keep-all; padding-right: 72px; }
+.body p { margin: 0; font-size: 17px; line-height: 36px; max-width: 34em; word-break: keep-all; }
+.body p + p { margin-top: 36px; }
+.from { margin: 40px 0 0; text-align: right; font-family: var(--f-hand); font-size: 32px; line-height: 36px; }
+.from small { display: block; font-family: var(--f-ui); font-size: 13px; color: var(--ink-soft); letter-spacing: .04em; }
+
+.cake { display: grid; justify-items: center; gap: 10px; font-family: var(--f-ui); color: var(--ink-soft); margin-top: 18px; }
+.candle { position: relative; width: 14px; height: 54px; border-radius: 3px;
+  background: repeating-linear-gradient(135deg, var(--stamp) 0 6px, var(--paper) 6px 12px); }
+.flame { position: absolute; left: 50%; bottom: 100%; width: 14px; height: 22px; margin-left: -7px;
+  background: var(--flame); border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  box-shadow: 0 0 18px 4px color-mix(in srgb, var(--flame) 55%, transparent);
+  animation: flicker 1.6s ease-in-out infinite; transform-origin: 50% 100%; transition: opacity .4s, transform .4s; }
+@keyframes flicker { 0%,100% { transform: scale(1) rotate(-2deg); } 50% { transform: scale(1.08,.94) rotate(2deg); } }
+.out .flame { opacity: 0; transform: scale(.3); animation: none; }
+.btn {
+  font: inherit; font-size: 15px; color: var(--ink); background: transparent;
+  border: 1.5px solid var(--ink); border-radius: 999px; padding: 9px 20px; cursor: pointer;
+}
+.btn:hover { background: var(--ink); color: var(--paper); }
+.btn:focus-visible { outline: 3px solid var(--flame); outline-offset: 3px; }
+.wish { min-height: 1.4em; font-size: 15px; }
+
+canvas#fx { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; transition-delay: 0s !important; }
+  .read .line { opacity: 1; transform: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- 1막: 봉투 -->
+<section class="stage" id="stage">
+  <button class="envelope" id="envelope" type="button" aria-label="편지 봉투 열기">
+    <div class="env-back"></div>
+    <div class="peek" aria-hidden="true">생일 축하해!</div>
+    <div class="pocket"></div>
+    <!-- ✏️ 봉투 앞면 받는 사람 -->
+    <div class="to-label">To. [친구 이름]</div>
+    <div class="flap"></div>
+    <div class="seal" aria-hidden="true">♥</div>
+  </button>
+  <p class="hint" id="hint">봉투를 눌러서 열어보세요</p>
+</section>
+
+<!-- 2막: 편지 -->
+<main class="read" id="read" hidden>
+  <article class="letter" aria-label="생일 편지">
+    <div class="stamp" aria-hidden="true"><b>10.08</b><span>HAPPY<br>BIRTHDAY</span></div>
+
+    <!-- ✏️ 받는 사람 이름 -->
+    <h1 class="to line">사랑하는 [친구 이름]에게</h1>
+
+    <!-- ✏️ 편지 본문: 문단마다 <p class="line">…</p> 하나씩 -->
+    <div class="body">
+      <p class="line">생일 축하해! 여기에 첫 문단을 채워 주세요.</p>
+      <p class="line">함께한 기억이나 고마웠던 일을 적는 두 번째 문단 자리예요.</p>
+      <p class="line">앞으로의 한 해를 응원하는 마지막 문단 자리예요.</p>
+    </div>
+
+    <!-- ✏️ 보내는 사람 -->
+    <p class="from line">[내 이름]이가<small>2026년 10월 8일</small></p>
+  </article>
+
+  <div class="cake line" id="cake">
+    <div class="candle" aria-hidden="true"><div class="flame"></div></div>
+    <button type="button" class="btn" id="blow">소원 빌고 촛불 끄기</button>
+    <div class="wish" id="wish" aria-live="polite"></div>
+  </div>
+</main>
+
+<canvas id="fx" aria-hidden="true"></canvas>
+
+<script>
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const env = document.getElementById('envelope');
+  const stage = document.getElementById('stage');
+  const read = document.getElementById('read');
+  const cake = document.getElementById('cake');
+  const btn = document.getElementById('blow');
+  const wish = document.getElementById('wish');
+  const cv = document.getElementById('fx');
+  const ctx = cv.getContext('2d');
+  let parts = [], raf = 0;
+
+  function size() { cv.width = innerWidth * devicePixelRatio; cv.height = innerHeight * devicePixelRatio; }
+  addEventListener('resize', size); size();
+
+  function burst(x, y, n, spread) {
+    if (reduce) return;
+    const css = getComputedStyle(document.documentElement);
+    const cols = ['--flame', '--stamp', '--env-deep', '--ink-soft'].map(v => css.getPropertyValue(v).trim());
+    const d = devicePixelRatio;
+    for (let i = 0; i < n; i++) {
+      const a = -Math.PI / 2 + (Math.random() - .5) * spread, s = (4 + Math.random() * 9) * d;
+      parts.push({ x: x * d, y: y * d, vx: Math.cos(a) * s, vy: Math.sin(a) * s, w: (4 + Math.random() * 5) * d,
+        c: cols[i % cols.length], r: Math.random() * 6, vr: (Math.random() - .5) * .3, life: 1 });
+    }
+    if (!raf) tick();
+  }
+  function tick() {
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    parts = parts.filter(p => p.life > 0 && p.y < cv.height + 40);
+    for (const p of parts) {
+      p.vy += .25 * devicePixelRatio; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.r += p.vr; p.life -= .006;
+      ctx.save(); ctx.globalAlpha = Math.max(p.life, 0); ctx.translate(p.x, p.y); ctx.rotate(p.r);
+      ctx.fillStyle = p.c; ctx.fillRect(-p.w / 2, -p.w / 4, p.w, p.w / 2); ctx.restore();
+    }
+    raf = parts.length ? requestAnimationFrame(tick) : 0;
+  }
+
+  function staggerLines() {
+    read.querySelectorAll('.line').forEach((el, i) => { el.style.animationDelay = (0.55 + i * 0.35) + 's'; });
+  }
+
+  let opened = false;
+  env.addEventListener('click', () => {
+    if (opened) return; opened = true;
+    env.classList.add('opening');
+    document.getElementById('hint').textContent = '두근두근…';
+    const wait = reduce ? 0 : 1700;
+    setTimeout(() => {
+      stage.classList.add('gone');
+      setTimeout(() => {
+        stage.hidden = true;
+        read.hidden = false;
+        staggerLines();
+        scrollTo(0, 0);
+        burst(innerWidth / 2, innerHeight * 0.35, 140, Math.PI * 1.6);
+      }, reduce ? 0 : 550);
+    }, wait);
+  });
+
+  btn.addEventListener('click', () => {
+    const out = cake.classList.toggle('out');
+    btn.textContent = out ? '촛불 다시 켜기' : '소원 빌고 촛불 끄기';
+    wish.textContent = out ? '소원이 꼭 이뤄지길! 🎉' : '';
+    if (out) { const r = btn.getBoundingClientRect(); burst(r.left + r.width / 2, r.top, 120, 1.8); }
+  });
+})();
+</script>
+</body>
+</html>
